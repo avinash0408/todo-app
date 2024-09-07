@@ -1,33 +1,78 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import axios from "axios";
+import AddTodo from './components/AddTodo';
+import Todo from './components/Todo';
+import './App.css';
+import { useState, useEffect } from "react";
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState([]);
 
+  function fetchTodos() {
+    axios.get("http://localhost:3000/todo/").then((res) => {
+      setTodos(res.data.message);
+    }).catch(err => alert(err));
+  }
+
+  const addTodo = async (newTodo) => {
+    try {
+      const res = await axios({
+        url: "http://localhost:3000/todo/add",
+        method: "POST",
+        headers: {
+          authorization: "your token comes here",
+        },
+        data: newTodo,
+      })
+      setTodos([...todos, res.data.todo]);
+    } catch (err) {
+      alert(err)
+    }
+  }
+
+  const markTodo = async (id) => {
+    try {
+        await axios({
+        url: "http://localhost:3000/todo/mark/" + id,
+        method: "PATCH",
+        headers: {
+          authorization: "your token comes here",
+        },
+        data: { "isCompleted": true },
+      })
+    } catch (err) {
+      alert(err)
+    }
+    setTodos(todos.map(task => {
+      if (task._id == id) {
+        task.isCompleted = true;
+      }
+      return task;
+    }));
+  }
+
+  const deleteTodo = async(id) =>{
+    try{
+      await axios({
+        url: "http://localhost:3000/todo/" + id,
+        method: "DELETE",
+        headers: {
+          authorization: "your token comes here",
+        },
+      })
+    }catch (err) {
+      alert(err)
+    }
+    setTodos(todos.filter(task =>{ return task._id != id}));
+  }
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <AddTodo onAddTodo={addTodo} />
+      <Todo todos={todos} markHandler={markTodo} deleteHandler={deleteTodo} />
     </>
   )
 }
