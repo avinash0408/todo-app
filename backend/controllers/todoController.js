@@ -3,7 +3,7 @@ const { createTodo,updateTodo,markTodo } = require('../validator');
 
 exports.getAllTasks = async(req,res) => {
     try{
-        const todos = await todoModel.find({}).select('-_id -__v');
+        const todos = await todoModel.find({}).select('-__v');
         res.status(200).json({
             message : todos
         })
@@ -16,6 +16,7 @@ exports.getAllTasks = async(req,res) => {
 exports.createTask = async(req,res) => {
     const payload = req.body;
     const parsedPayload = createTodo.safeParse(payload);
+    let newTodo ={};
     if(!parsedPayload.success){
         res.status(411).json({
             message : parsedPayload.error.issues.map(e=>e.message)
@@ -29,7 +30,7 @@ exports.createTask = async(req,res) => {
         })
     }
     try{
-        const newTodo = await todoModel.create({
+        newTodo = await todoModel.create({
             title : payload.title,
             description : payload.description
         })
@@ -39,7 +40,8 @@ exports.createTask = async(req,res) => {
         })
     }
     res.status(201).json({
-        message : 'New todo created successfully'
+        message : 'New todo created successfully',
+        todo: newTodo
     })
 }
 
@@ -101,5 +103,25 @@ exports.markTask = async(req,res) => {
     }
     res.status(201).json({
         message : ' Todo Marked successfully'
+    })
+}
+
+exports.deleteTask = async(req,res) => {
+    const todoId = req.params.todoId;
+    const isExistingTodo = await todoModel.findOne({_id:todoId});
+    if(!isExistingTodo){
+        return res.status(400).json({
+            message : `Todo doesn't exist!!`
+        })
+    }
+    try{
+        const updatedTodo = await todoModel.deleteOne({_id:todoId})
+    }catch(err){
+        return res.status(400).json({
+            message : 'Error occured while deleting todo'
+        })
+    }
+    res.status(201).json({
+        message : ' Todo Deleted successfully'
     })
 }
