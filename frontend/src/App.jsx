@@ -1,7 +1,6 @@
 import axios from "axios";
 import AddTodo from './components/AddTodo';
 import Todo from './components/Todo';
-import './App.css';
 import { useState, useEffect } from "react";
 
 
@@ -70,11 +69,12 @@ function App() {
     fetchTodos();
   }, []);
   return (
-    <>
+    <div className="container flex flex-col bg-white min-h-screen min-w-screen min-w-full md:flex-row">
       <AddTodo onAddTodo={addTodo} />
       <Todo todos={todos} markHandler={markTodo} deleteHandler={deleteTodo} />
-    </>
+    </div>
   )
+ 
 }
 
 export default App
