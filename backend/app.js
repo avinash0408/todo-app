@@ -5,7 +5,12 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const app = express();
 
-app.use(cors());
+app.use(cors(
+    {
+       origin: ['https://todo-app-inky-iota.vercel.app'],
+       credentials: true
+    }
+));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/',authRouter);
