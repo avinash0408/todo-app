@@ -6,9 +6,10 @@ import { useState, useEffect } from "react";
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const apiUrl = 'https://vi-todo-backend.vercel.app';
 
   function fetchTodos() {
-    axios.get("http://localhost:3000/todo/").then((res) => {
+    axios.get(`${apiUrl}/todo/`).then((res) => {
       setTodos(res.data.message);
     }).catch(err => alert(err));
   }
@@ -16,7 +17,7 @@ function App() {
   const addTodo = async (newTodo) => {
     try {
       const res = await axios({
-        url: "http://localhost:3000/todo/add",
+        url: `${apiUrl}/todo/add`,
         method: "POST",
         headers: {
           authorization: "your token comes here",
@@ -32,7 +33,7 @@ function App() {
   const markTodo = async (id) => {
     try {
         await axios({
-        url: "http://localhost:3000/todo/mark/" + id,
+        url: `${apiUrl}/todo/mark/`+ id,
         method: "PATCH",
         headers: {
           authorization: "your token comes here",
@@ -53,7 +54,7 @@ function App() {
   const deleteTodo = async(id) =>{
     try{
       await axios({
-        url: "http://localhost:3000/todo/" + id,
+        url: `${apiUrl}/todo/` + id,
         method: "DELETE",
         headers: {
           authorization: "your token comes here",
