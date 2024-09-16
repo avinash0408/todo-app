@@ -6,7 +6,7 @@ const cors = require('cors');
 const app = express();
 
 app.use(cors({
-    origin : 'vi-todo-app.vercel.app',
+    origin : 'https://vi-todo-app.vercel.app',
     methods: 'GET,POST,PUT,DELETE,PATCH'
 }));
 app.use(express.json());
