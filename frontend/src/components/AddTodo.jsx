@@ -1,23 +1,24 @@
 /* eslint-disable react/prop-types */
 
-import { useState } from 'react';
+import { useState,useCallback } from 'react';
 
 function AddTodo({ onAddTodo }) {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
-    function handleAddTodo() {
-        let newTask = { title, description };
-        onAddTodo(newTask);
-        setTitle('');
-        setDescription('');
-        toggleDialog();
-    }
     function toggleDialog(){
         setDialogOpen(!dialogOpen);
     }
 
     const AddTodoForm = () => {
+        const [title, setTitle] = useState('');
+        const [description, setDescription] = useState('');
+        const handleAddTodo = useCallback((e) => {
+            e.preventDefault();
+            let newTask = { title, description };
+            onAddTodo(newTask);
+            setTitle('');
+            setDescription('');
+            toggleDialog();
+          }, [title, description]);
         return (
             <div className={`w-full md:w-2/5 p-4 border bg-white border-gray-200 rounded-lg shadow sm:p-6 md:p-8 ${dialogOpen ? 'block' : 'hidden md:block'}`}>
                 <form className='space-y-6 w-full' onSubmit={handleAddTodo}>
