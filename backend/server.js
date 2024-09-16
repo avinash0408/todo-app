@@ -13,3 +13,5 @@ mongoose.connect(process.env.DB_URL).then((conn)=>{
 app.listen(3000,()=>{
     console.log("Server started..");
 });
+
+module.exports = app;
