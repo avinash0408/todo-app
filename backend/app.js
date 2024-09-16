@@ -6,7 +6,8 @@ const cors = require('cors');
 const app = express();
 
 app.use(cors({
-    origin : 'https://todo-backend-ochre-five.vercel.app/'
+    origin : 'vi-todo-app.vercel.app',
+    methods: 'GET,POST,PUT,DELETE,PATCH'
 }));
 app.use(express.json());
 app.use(cookieParser());
