@@ -1,81 +1,49 @@
+import { useState,useEffect } from "react";
+import './App.css';
+import TodoPage from "./pages/TodoPage";
+import AuthPage from "./pages/AuthPage";
 import axios from "axios";
-import AddTodo from './components/AddTodo';
-import Todo from './components/Todo';
-import { useState, useEffect } from "react";
-
 
 function App() {
-  const [todos, setTodos] = useState([]);
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const apiUrl = 'https://vi-todo-backend.vercel.app';
+  //const apiUrl = 'http://localhost:3000'
 
-  function fetchTodos() {
-    axios.get(`${apiUrl}/todo/`).then((res) => {
-      setTodos(res.data.message);
-    }).catch(err => alert(err));
-  }
-
-  const addTodo = async (newTodo) => {
+  // Function to check authentication status
+  const checkAuthentication = async () => {
     try {
-      const res = await axios({
-        url: `${apiUrl}/todo/add`,
-        method: "POST",
-        headers: {
-          authorization: "your token comes here",
-        },
-        data: newTodo,
-      })
-      setTodos([...todos, res.data.todo]);
-    } catch (err) {
-      alert(err)
-    }
-  }
-
-  const markTodo = async (id) => {
-    try {
-        await axios({
-        url: `${apiUrl}/todo/mark/`+ id,
-        method: "PATCH",
-        headers: {
-          authorization: "your token comes here",
-        },
-        data: { "isCompleted": true },
-      })
-    } catch (err) {
-      alert(err)
-    }
-    setTodos(todos.map(task => {
-      if (task._id == id) {
-        task.isCompleted = true;
+      const response = await axios.get(`${apiUrl}/todo/`, {
+        withCredentials: true // Include cookies
+      });
+      if (response.status == 403) {
+        setIsAuthenticated(false); // User is authenticated
+      } else {
+        setIsAuthenticated(true); // User is not authenticated
       }
-      return task;
-    }));
-  }
-
-  const deleteTodo = async(id) =>{
-    try{
-      await axios({
-        url: `${apiUrl}/todo/` + id,
-        method: "DELETE",
-        headers: {
-          authorization: "your token comes here",
-        },
-      })
-    }catch (err) {
-      alert(err)
+    } catch (error) {
+      console.error('Error checking authentication:', error);
+      setIsAuthenticated(false); // Default to not authenticated on error
     }
-    setTodos(todos.filter(task =>{ return task._id != id}));
-  }
+  };
 
   useEffect(() => {
-    fetchTodos();
+    checkAuthentication(); // Check authentication status on load
   }, []);
+  function authenticate(authFlag){
+    setIsAuthenticated(authFlag);
+  }
+
   return (
-    <div className="container flex flex-col bg-white min-h-screen min-w-screen min-w-full md:flex-row">
-      <AddTodo onAddTodo={addTodo} />
-      <Todo todos={todos} markHandler={markTodo} deleteHandler={deleteTodo} />
-    </div>
+    <>
+      {
+        !isAuthenticated ?
+          <AuthPage handleAuthentication={authenticate} apiUrl={apiUrl}/> :
+          <TodoPage apiUrl={apiUrl}/>
+      }
+    </>
   )
- 
+
 }
 
 export default App

@@ -51,7 +51,7 @@ exports.login = async(req,res) => {
     }
     else if(await existingUser.comparePasswords(payload.password)){
         const token = jwt.sign({id:existingUser._id},jwtPassword,{expiresIn:'1h'});
-        res.cookie("access_token", token, {
+        res.cookie('access_token', token, {
             httpOnly: true
           }).status(200).json({
             message :`Welcome ${existingUser.name}`,
@@ -60,7 +60,7 @@ exports.login = async(req,res) => {
     }
     else{
         res.status(400).json({
-            message : `Please enter valid password for user ${payload.name}`
+            message : `Please enter valid password for user ${existingUser.name}`
         })
     }
 }

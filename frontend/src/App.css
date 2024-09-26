@@ -1,0 +1,11 @@
+.perspective {
+    perspective: 1000px;
+}
+
+.flip-in {
+    transform: rotateY(0deg);
+}
+
+.flip-out {
+    transform: rotateY(180deg);
+}

@@ -5,12 +5,16 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const app = express();
 
+
 // Configure CORS
-app.use(cors({
-    origin: 'https://vi-todo-app.vercel.app', // Allow requests from your frontend domain
+let corsOptions = {
+    origin: 'https://vi-todo-app.vercel.app',// Allow requests from your frontend domain
+   //origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-  }));
+   allowedHeaders: ['Content-Type', 'Authorization','Cookie'],
+    credentials: true
+  };
+app.use(cors(corsOptions));
   
 app.use(express.json());
 app.use(cookieParser());
