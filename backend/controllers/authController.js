@@ -12,12 +12,6 @@ exports.signup = async(req,res) => {
         })
         return;
     }
-    const isExistingUser = await userModel.findOne({email:payload.email});
-    if(isExistingUser){
-        return res.status(400).json({
-            message : `User with email ${payload.email} already exists. Please try with different email`
-        })
-    }
     try{
         const newUser = await userModel.create({
             name : payload.name,
@@ -25,6 +19,12 @@ exports.signup = async(req,res) => {
             password : payload.password
         })
     }catch(err){
+        console.log(err.errorResponse.errmsg);
+        if(err.errorResponse.errmsg.includes('duplicate key error collection')){
+            return res.status(400).json({
+            message : 'Email already in use!! Please use a different Email'
+        })
+        }
         return res.status(400).json({
             message : 'Error occured while creating user'
         })
@@ -63,6 +63,12 @@ exports.login = async(req,res) => {
             message : `Please enter valid password for user ${existingUser.name}`
         })
     }
+}
+
+exports.checkAuth = async(req,res) => {
+    res.status(200).json({
+        message: "User Authenticated !!!"
+    });
 }
 
 exports.authenticate = async(req,res,next) => {

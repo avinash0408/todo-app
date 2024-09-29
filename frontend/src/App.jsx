@@ -1,46 +1,34 @@
-import { useState,useEffect } from "react";
+/* eslint-disable react/prop-types */
+
 import './App.css';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import TodoPage from "./pages/TodoPage";
 import AuthPage from "./pages/AuthPage";
-import axios from "axios";
+import ProtectedRoute from './components/ProtectedRoute';
+
+
 
 function App() {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const apiUrl = 'https://vi-todo-backend.vercel.app';
-  //const apiUrl = 'http://localhost:3000'
-
-  // Function to check authentication status
-  const checkAuthentication = async () => {
-    try {
-      const response = await axios.get(`${apiUrl}/todo/`, {
-        withCredentials: true // Include cookies
-      });
-      if (response.status == 403) {
-        setIsAuthenticated(false); // User is authenticated
-      } else {
-        setIsAuthenticated(true); // User is not authenticated
-      }
-    } catch (error) {
-      console.error('Error checking authentication:', error);
-      setIsAuthenticated(false); // Default to not authenticated on error
-    }
-  };
-
-  useEffect(() => {
-    checkAuthentication(); // Check authentication status on load
-  }, []);
-  function authenticate(authFlag){
-    setIsAuthenticated(authFlag);
-  }
+ // const apiUrl = 'http://localhost:3000';
+  
 
   return (
     <>
-      {
+      {/* {
         !isAuthenticated ?
           <AuthPage handleAuthentication={authenticate} apiUrl={apiUrl}/> :
           <TodoPage apiUrl={apiUrl}/>
       }
+      <button className="bg-slate-600 rounded-md p-4 text-white block text-center" onClick={doLogout}>Logout</button> */}
+      <Router>
+            <Routes>
+                <Route path='/' element={<AuthPage apiUrl={apiUrl}/>} />
+                <Route path="/dashboard" element={<ProtectedRoute><TodoPage apiUrl={apiUrl}/></ProtectedRoute>} />
+                <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+        </Router>
     </>
   )
 

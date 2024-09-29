@@ -11,5 +11,6 @@ router.route('/').get((req,res)=>{
 router.route('/signup').post(authController.signup);
 router.route('/signin').post(authController.login);
 router.route('/signout').get(authController.logout);
+router.route('/checkAuth').get(authController.authenticate,authController.checkAuth);
 
 module.exports = router;

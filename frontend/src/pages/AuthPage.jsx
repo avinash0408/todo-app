@@ -2,27 +2,26 @@ import { useState } from "react";
 import axios from "axios";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
-
+import { useNavigate } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
-function AuthPage({ handleAuthentication, apiUrl }) {
+function AuthPage({ apiUrl }) {
     const [isLoginForm, setIsLoginForm] = useState(true);
+    const navigate = useNavigate();
 
     const onToggleLogin = () => {
         setIsLoginForm(!isLoginForm);
     }
     const doLogin = async (loginData) => {
-        let authFlag = false;
         try {
             await axios.post(`${apiUrl}/signin`, loginData,{
                 withCredentials: true
             });
-            authFlag = true;
+            navigate('/dashboard');
         }catch (err) {
-            authFlag = false;
+            console.log(err);
             alert(err.response.data.message);
         }
-        handleAuthentication(authFlag);
     }
     const doSignup = async (signupData) => {
         try {
@@ -35,9 +34,7 @@ function AuthPage({ handleAuthentication, apiUrl }) {
            doLogin({email,password});
        }catch (err) {
            alert(err.response.data.message);
-           handleAuthentication(false);
        }
-       
     }
 
     return (

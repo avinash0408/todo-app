@@ -3,7 +3,7 @@ const { createTodo,updateTodo,markTodo } = require('../validator');
 
 exports.getAllTasks = async(req,res) => {
     try{
-        const todos = await todoModel.find({}).select('-__v');
+        const todos = await todoModel.find({userId : req.userId}).select('-__v');
         res.status(200).json({
             message : todos
         })
@@ -23,16 +23,11 @@ exports.createTask = async(req,res) => {
         })
         return;
     }
-    const isExistingTodo = await todoModel.findOne({title:payload.title,description:payload.description});
-    if(isExistingTodo){
-        return res.status(400).json({
-            message : `Todo - ${payload.title} already exists!!`
-        })
-    }
     try{
         newTodo = await todoModel.create({
             title : payload.title,
-            description : payload.description
+            description : payload.description,
+            userId : req.userId
         })
     }catch(err){
         return res.status(400).json({
