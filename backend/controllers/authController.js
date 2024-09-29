@@ -52,7 +52,8 @@ exports.login = async(req,res) => {
     else if(await existingUser.comparePasswords(payload.password)){
         const token = jwt.sign({id:existingUser._id},jwtPassword,{expiresIn:'1h'});
         res.cookie('access_token', token, {
-            httpOnly: true
+            httpOnly: true,
+            secure: true
           }).status(200).json({
             message :`Welcome ${existingUser.name}`,
             token
