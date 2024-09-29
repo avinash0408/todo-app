@@ -25,7 +25,7 @@ function App() {
       <Router>
             <Routes>
                 <Route path='/' element={<AuthPage apiUrl={apiUrl}/>} />
-                <Route path="/dashboard" element={<ProtectedRoute><TodoPage apiUrl={apiUrl}/></ProtectedRoute>} />
+                <Route path="/dashboard" element={<ProtectedRoute apiUrl={apiUrl}><TodoPage apiUrl={apiUrl}/></ProtectedRoute>} />
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </Router>

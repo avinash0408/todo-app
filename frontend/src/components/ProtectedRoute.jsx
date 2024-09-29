@@ -3,8 +3,7 @@ import axios from 'axios';
 import { memo, useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = memo(function ProtectedRoute(props){
-    const apiUrl = 'http://localhost:3000';
+const ProtectedRoute = memo(function ProtectedRoute(props,{apiUrl}){
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
 
