@@ -3,14 +3,13 @@ import axios from 'axios';
 import { memo, useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = memo(function ProtectedRoute(props,{apiUrl}){
+const ProtectedRoute = memo(function ProtectedRoute(props){
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         const checkAuthentication = async () => {
             try {
-                 await axios.get(`${apiUrl}/checkAuth`, { 
+                 await axios.get(`${props.apiUrl}/checkAuth`, { 
                     withCredentials: true 
                 });
                 setIsAuthenticated(true);

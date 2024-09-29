@@ -11,17 +11,11 @@ import ProtectedRoute from './components/ProtectedRoute';
 function App() {
 
   const apiUrl = 'https://vi-todo-backend.vercel.app';
- // const apiUrl = 'http://localhost:3000';
+  //const apiUrl = 'http://localhost:3000';
   
 
   return (
     <>
-      {/* {
-        !isAuthenticated ?
-          <AuthPage handleAuthentication={authenticate} apiUrl={apiUrl}/> :
-          <TodoPage apiUrl={apiUrl}/>
-      }
-      <button className="bg-slate-600 rounded-md p-4 text-white block text-center" onClick={doLogout}>Logout</button> */}
       <Router>
             <Routes>
                 <Route path='/' element={<AuthPage apiUrl={apiUrl}/>} />
