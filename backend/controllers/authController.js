@@ -53,7 +53,8 @@ exports.login = async(req,res) => {
         const token = jwt.sign({id:existingUser._id},jwtPassword,{expiresIn:'1h'});
         res.cookie('access_token', token, {
             httpOnly: true,
-            secure: true
+            secure: true,
+            sameSite: 'None',
           }).status(200).json({
             message :`Welcome ${existingUser.name}`,
             token
